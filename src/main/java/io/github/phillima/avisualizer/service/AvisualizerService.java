@@ -8,6 +8,7 @@ import com.google.gson.GsonBuilder;
 import io.github.phillima.avisualizer.entity.AvisualizerEntity;
 import io.github.phillima.avisualizer.model.AvisualizerModel;
 import io.github.phillima.avisualizer.repository.AvisualizerRepository;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
@@ -114,6 +116,12 @@ public class AvisualizerService {
     }
 
     public AvisualizerEntity saveModel(AvisualizerModel model){
+        String cvHash = DigestUtils.sha256Hex(model.getCv());
+        List<AvisualizerEntity> response = this.repository.findByHash(cvHash);
+        if (!response.isEmpty()){
+            return response.get(0);
+        }
+
         AvisualizerEntity entity = new AvisualizerEntity();
         entity.setId(UUID.randomUUID());
         entity.setName(model.getName());
@@ -121,6 +129,8 @@ public class AvisualizerService {
         entity.setCv(model.getCv());
         entity.setSv(model.getSv());
         entity.setPv(model.getPv());
+
+        entity.setHash(cvHash);
 
         entity.setLast_update(LocalDateTime.now());
 

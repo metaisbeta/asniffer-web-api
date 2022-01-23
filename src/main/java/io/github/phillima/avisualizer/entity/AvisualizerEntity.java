@@ -19,6 +19,7 @@ public class AvisualizerEntity {
     @Id
     private UUID id;
     private String name;
+    private String hash;
 
     private String cv;
     private String pv;

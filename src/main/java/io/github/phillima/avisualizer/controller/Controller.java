@@ -20,11 +20,6 @@ public class Controller {
     @Autowired
     private AvisualizerService avisualizerService;
 
-    @RequestMapping("/rest")
-    public SimpleResponse index() {
-        return new SimpleResponse("Meta is Beta!");
-    }
-
     @RequestMapping("/data.json")
     public ResponseEntity<AvisualizerEntity> returnAllData(@RequestParam(required = false, name = "project") String project) throws URISyntaxException, IOException {
         AvisualizerEntity response = avisualizerService.getAllInformation(project);
