@@ -6,8 +6,11 @@ import com.github.phillima.asniffer.output.json.d3hierarchy.systemview.JSONRepor
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.github.phillima.avisualizer.entity.AvisualizerEntity;
+import io.github.phillima.avisualizer.entity.ErrorEntity;
 import io.github.phillima.avisualizer.model.AvisualizerModel;
+import io.github.phillima.avisualizer.model.ErrorModel;
 import io.github.phillima.avisualizer.repository.AvisualizerRepository;
+import io.github.phillima.avisualizer.repository.ErrorRepository;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +32,9 @@ public class AvisualizerService {
 
     @Autowired
     private AvisualizerRepository repository;
+
+    @Autowired
+    private ErrorRepository errorRepository;
 
     private static final String CV_DEFAULT = "SpaceWeatherTSI-CV.json";
     private static final String PV_DEFAULT = "SpaceWeatherTSI-PV.json";
@@ -150,6 +156,18 @@ public class AvisualizerService {
             return -1L;
         }
         return projectID;
+    }
+
+    public void saveError(ErrorModel model){
+        ErrorEntity entity = new ErrorEntity();
+
+        entity.setId(UUID.randomUUID());
+        entity.setOs(model.getOs());
+        entity.setProject_name(model.getProject_name());
+        entity.setError_message(model.getError_message());
+        entity.setLast_update(LocalDateTime.now());
+        this.errorRepository.save(entity);
+        return;
     }
 
 }

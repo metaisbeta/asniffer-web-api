@@ -3,9 +3,11 @@ package io.github.phillima.avisualizer.controller;
 
 import io.github.phillima.avisualizer.entity.AvisualizerEntity;
 import io.github.phillima.avisualizer.model.AvisualizerModel;
+import io.github.phillima.avisualizer.model.ErrorModel;
 import io.github.phillima.avisualizer.model.SimpleResponse;
 import io.github.phillima.avisualizer.service.AvisualizerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -45,6 +47,12 @@ public class Controller {
     public ResponseEntity<AvisualizerEntity> saveData(@RequestBody AvisualizerModel model) {
         AvisualizerEntity resp = avisualizerService.saveModel(model);
         return ResponseEntity.ok(resp);
+    }
+
+    @PostMapping("/data/error")
+    public ResponseEntity saveError(@RequestBody ErrorModel model) {
+        avisualizerService.saveError(model);
+        return ResponseEntity.ok(HttpEntity.EMPTY);
     }
 
 }
