@@ -123,13 +123,15 @@ public class AvisualizerService {
 
     public AvisualizerEntity saveModel(AvisualizerModel model){
         String cvHash = DigestUtils.sha256Hex(model.getCv());
-        List<AvisualizerEntity> response = this.repository.findByHash(cvHash);
-        if (!response.isEmpty()){
-            return response.get(0);
+        List<AvisualizerEntity> responseHash = this.repository.findByHash(cvHash);
+        if (!responseHash.isEmpty()){
+            return responseHash.get(0);
         }
 
+        List<AvisualizerEntity> responseName = this.repository.findByName(model.getName());
+
         AvisualizerEntity entity = new AvisualizerEntity();
-        entity.setId(UUID.randomUUID());
+        entity.setId(model.getName() + "-" + responseName.size());
         entity.setName(model.getName());
 
         entity.setCv(model.getCv());

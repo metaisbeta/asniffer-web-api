@@ -14,4 +14,7 @@ public interface AvisualizerRepository extends MongoRepository<AvisualizerEntity
     @Query("{ 'hash' : ?0 }")
     List<AvisualizerEntity> findByHash(String hash);
 
+    @Query("{ 'name' : ?0 }")
+    List<AvisualizerEntity> findByName(String name);
+
 }
