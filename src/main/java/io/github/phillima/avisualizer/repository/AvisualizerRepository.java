@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
-public interface AvisualizerRepository extends MongoRepository<AvisualizerEntity, UUID> {
+public interface AvisualizerRepository extends MongoRepository<AvisualizerEntity, String> {
 
     @Query("{ 'hash' : ?0 }")
     List<AvisualizerEntity> findByHash(String hash);

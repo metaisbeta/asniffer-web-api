@@ -92,7 +92,7 @@ public class AvisualizerService {
         if(StringUtils.isEmpty(projectID)){
             return returnFileSV(SV_DEFAULT);
         }
-        Optional<AvisualizerEntity> response= this.repository.findById(UUID.fromString(projectID));
+        Optional<AvisualizerEntity> response= this.repository.findById(projectID);
         if(response.isPresent()){
             return response.get().getSv();
         }
@@ -103,7 +103,7 @@ public class AvisualizerService {
         if(StringUtils.isEmpty(projectID)){
             return returnFileSV(SV_DEFAULT);
         }
-        Optional<AvisualizerEntity> response= this.repository.findById(UUID.fromString(projectID));
+        Optional<AvisualizerEntity> response= this.repository.findById(projectID);
         if(response.isPresent()){
             return response.get().getCv();
         }
@@ -114,7 +114,7 @@ public class AvisualizerService {
         if(StringUtils.isEmpty(projectID)){
             return returnFileSV(SV_DEFAULT);
         }
-        Optional<AvisualizerEntity> response= this.repository.findById(UUID.fromString(projectID));
+        Optional<AvisualizerEntity> response= this.repository.findById(projectID);
         if(response.isPresent()){
             return response.get().getPv();
         }
@@ -145,19 +145,12 @@ public class AvisualizerService {
         return this.repository.save(entity);
     }
 
-    public AvisualizerEntity getAllInformation(String projectUUID) throws URISyntaxException, IOException {
-        Optional<AvisualizerEntity> response = this.repository.findById(UUID.fromString(projectUUID));
+    public AvisualizerEntity getAllInformation(String projectID) {
+        Optional<AvisualizerEntity> response = this.repository.findById(projectID);
         if(response.isPresent()){
             return response.get();
         }
         return new AvisualizerEntity();
-    }
-
-    private Long processProjectID(Long projectID){
-        if(Objects.isNull(projectID)){
-            return -1L;
-        }
-        return projectID;
     }
 
     public void saveError(ErrorModel model){
