@@ -4,16 +4,15 @@ package io.github.phillima.avisualizer.controller;
 import io.github.phillima.avisualizer.entity.AvisualizerEntity;
 import io.github.phillima.avisualizer.model.AvisualizerModel;
 import io.github.phillima.avisualizer.model.ErrorModel;
-import io.github.phillima.avisualizer.model.SimpleResponse;
 import io.github.phillima.avisualizer.service.AvisualizerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Objects;
 
 @CrossOrigin
 @RestController
@@ -25,6 +24,10 @@ public class Controller {
     @RequestMapping("/data.json")
     public ResponseEntity<AvisualizerEntity> returnAllData(@RequestParam(required = false, name = "project") String project) throws URISyntaxException, IOException {
         AvisualizerEntity response = avisualizerService.getAllInformation(project);
+        if(Objects.isNull(response.getId())){
+            return ResponseEntity.badRequest().build();
+        }
+
         return ResponseEntity.ok(response);
     }
 
@@ -44,8 +47,16 @@ public class Controller {
     }
 
     @PostMapping("/data/save")
-    public ResponseEntity<AvisualizerEntity> saveData(@RequestBody AvisualizerModel model) {
-        AvisualizerEntity resp = avisualizerService.saveModel(model);
+    public ResponseEntity<AvisualizerEntity> saveData(
+            @RequestBody AvisualizerModel model,
+            @RequestParam(name = "persist", required = false, defaultValue = "true") boolean persist) {
+        AvisualizerEntity resp;
+        if(persist){
+            resp = avisualizerService.saveModel(model);
+        } else{
+            resp = avisualizerService.saveModelTemporary(model);
+        }
+
         return ResponseEntity.ok(resp);
     }
 

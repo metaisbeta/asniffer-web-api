@@ -25,6 +25,8 @@ public class AvisualizerEntity {
     private String pv;
     private String sv;
 
-    private LocalDateTime last_update;
+    private boolean persist;
+    private long consults;
 
+    private LocalDateTime last_update;
 }

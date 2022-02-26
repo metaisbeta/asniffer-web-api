@@ -1,10 +1,5 @@
 package io.github.phillima.avisualizer.service;
 
-import com.github.phillima.asniffer.output.json.d3hierarchy.classview.JSONReportCV;
-import com.github.phillima.asniffer.output.json.d3hierarchy.packageview.JSONReportPV;
-import com.github.phillima.asniffer.output.json.d3hierarchy.systemview.JSONReportSV;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import io.github.phillima.avisualizer.entity.AvisualizerEntity;
 import io.github.phillima.avisualizer.entity.ErrorEntity;
 import io.github.phillima.avisualizer.model.AvisualizerModel;
@@ -42,8 +37,7 @@ public class AvisualizerService {
 
     private static final String DEFAULT_NAME = "SpaceWeatherTSI";
 
-    private static final String NO_PARAM = "";
-
+    private static final int MAX_CONSULT = 2;
 
     private AvisualizerModel currentModel = standardResponse();
 
@@ -139,6 +133,26 @@ public class AvisualizerService {
         entity.setPv(model.getPv());
 
         entity.setHash(cvHash);
+        entity.setPersist(true);
+        entity.setConsults(0);
+
+        entity.setLast_update(LocalDateTime.now());
+
+        return this.repository.save(entity);
+    }
+
+    public AvisualizerEntity saveModelTemporary(AvisualizerModel model){
+        AvisualizerEntity entity = new AvisualizerEntity();
+        entity.setId(UUID.randomUUID().toString());
+        entity.setName(model.getName());
+
+        entity.setCv(model.getCv());
+        entity.setSv(model.getSv());
+        entity.setPv(model.getPv());
+
+        entity.setHash("");
+        entity.setPersist(false);
+        entity.setConsults(0);
 
         entity.setLast_update(LocalDateTime.now());
 
@@ -148,6 +162,16 @@ public class AvisualizerService {
     public AvisualizerEntity getAllInformation(String projectID) {
         Optional<AvisualizerEntity> response = this.repository.findById(projectID);
         if(response.isPresent()){
+            Long consults = response.get().getConsults();
+            response.get().setConsults(consults+1);
+
+            if (!response.get().isPersist() && (consults+1) >= MAX_CONSULT){
+                this.repository.delete(response.get());
+                return response.get();
+            }
+
+            response.get().setLast_update(LocalDateTime.now());
+            this.repository.save(response.get());
             return response.get();
         }
         return new AvisualizerEntity();
