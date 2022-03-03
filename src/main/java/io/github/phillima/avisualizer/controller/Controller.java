@@ -22,13 +22,16 @@ public class Controller {
     private AvisualizerService avisualizerService;
 
     @RequestMapping("/data.json")
-    public ResponseEntity<AvisualizerEntity> returnAllData(@RequestParam(required = false, name = "project") String project) throws URISyntaxException, IOException {
-        AvisualizerEntity response = avisualizerService.getAllInformation(project);
-        if(Objects.isNull(response.getId())){
-            return ResponseEntity.badRequest().build();
+    public ResponseEntity<AvisualizerEntity> returnAllData(@RequestParam(required = false, name = "project") String project) throws Exception {
+        try {
+            AvisualizerEntity response = avisualizerService.getAllInformation(project);
+            if (Objects.isNull(response.getId())) {
+                return ResponseEntity.badRequest().build();
+            }
+            return ResponseEntity.ok(response);
+        } catch (Exception e){
+            return ResponseEntity.internalServerError().build();
         }
-
-        return ResponseEntity.ok(response);
     }
 
     @RequestMapping("/data/sv.json")

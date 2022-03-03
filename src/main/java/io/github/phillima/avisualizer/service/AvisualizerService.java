@@ -159,22 +159,26 @@ public class AvisualizerService {
         return this.repository.save(entity);
     }
 
-    public AvisualizerEntity getAllInformation(String projectID) {
-        Optional<AvisualizerEntity> response = this.repository.findById(projectID);
-        if(response.isPresent()){
-            Long consults = response.get().getConsults();
-            response.get().setConsults(consults+1);
+    public AvisualizerEntity getAllInformation(String projectID) throws Exception {
+        try {
+            Optional<AvisualizerEntity> response = this.repository.findById(projectID);
+            if (response.isPresent()) {
+                Long consults = response.get().getConsults();
+                response.get().setConsults(consults + 1);
 
-            if (!response.get().isPersist() && (consults+1) >= MAX_CONSULT){
-                this.repository.delete(response.get());
+                if (!response.get().isPersist() && (consults + 1) >= MAX_CONSULT) {
+                    this.repository.delete(response.get());
+                    return response.get();
+                }
+
+                response.get().setLast_update(LocalDateTime.now());
+                this.repository.save(response.get());
                 return response.get();
             }
-
-            response.get().setLast_update(LocalDateTime.now());
-            this.repository.save(response.get());
-            return response.get();
+            return new AvisualizerEntity();
+        } catch (Exception e){
+            throw new Exception("Error during Database consult.");
         }
-        return new AvisualizerEntity();
     }
 
     public void saveError(ErrorModel model){
