@@ -10,7 +10,7 @@
     </parent>
     <groupId>io.github.phillima</groupId>
     <artifactId>asniffer-web-api</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>asniffer-web-api</name>
     <description>Asniffer Web api</description>
 
