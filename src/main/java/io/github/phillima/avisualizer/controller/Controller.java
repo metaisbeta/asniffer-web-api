@@ -34,21 +34,6 @@ public class Controller {
         }
     }
 
-    @RequestMapping("/data/sv.json")
-    public String returnSv(@RequestParam(required = false, name = "project") String project) throws URISyntaxException, IOException {
-        return avisualizerService.returnSV(project);
-    }
-
-    @RequestMapping("/data/pv.json")
-    public String returnPV(@RequestParam(required = false, name = "project") String project) throws URISyntaxException, IOException {
-        return avisualizerService.returnPV(project);
-    }
-
-    @RequestMapping("/data/cv.json")
-    public String returnCV(@RequestParam(required = false, name = "project") String project) throws URISyntaxException, IOException {
-        return avisualizerService.returnCV(project);
-    }
-
     @PostMapping("/data/save")
     public ResponseEntity<AvisualizerEntity> saveData(
             @RequestBody AvisualizerModel model,
